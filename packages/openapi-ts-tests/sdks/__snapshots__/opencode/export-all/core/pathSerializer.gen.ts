@@ -106,6 +106,22 @@ export const serializeArrayParam = ({
   return style === 'label' || style === 'matrix' ? separator + joinedValues : joinedValues;
 };
 
+export const serializeJsonParam = ({
+  allowReserved,
+  name,
+  value,
+}: SerializePrimitiveOptions & {
+  value: unknown;
+}): string => {
+  const json = JSON.stringify(value, (_key, v) => (typeof v === 'bigint' ? v.toString() : v));
+
+  if (json === undefined) {
+    return '';
+  }
+
+  return `${name}=${allowReserved ? json : encodeURIComponent(json)}`;
+};
+
 export const serializePrimitiveParam = ({
   allowReserved,
   name,

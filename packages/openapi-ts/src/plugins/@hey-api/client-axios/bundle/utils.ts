@@ -2,6 +2,7 @@ import { getAuthToken } from '../../client-core/bundle/auth';
 import type { QuerySerializerOptions } from '../../client-core/bundle/bodySerializer';
 import {
   serializeArrayParam,
+  serializeJsonParam,
   serializeObjectParam,
   serializePrimitiveParam,
 } from '../../client-core/bundle/pathSerializer';
@@ -24,7 +25,14 @@ export const createQuerySerializer = <T = unknown>({
 
         const options = parameters[name] || args;
 
-        if (Array.isArray(value)) {
+        if (options.type === 'json') {
+          const serializedJson = serializeJsonParam({
+            allowReserved: options.allowReserved,
+            name,
+            value,
+          });
+          if (serializedJson) search.push(serializedJson);
+        } else if (Array.isArray(value)) {
           const serializedArray = serializeArrayParam({
             allowReserved: options.allowReserved,
             explode: true,

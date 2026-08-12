@@ -6,10 +6,22 @@ export type QuerySerializer = (query: Record<string, unknown>) => string;
 
 export type BodySerializer = (body: unknown) => unknown;
 
+/**
+ * Media types a parameter value can be serialized as. Parameters described
+ * with `content` instead of `schema` are serialized using their media type
+ * rather than the `style` and `explode` rules.
+ */
+export type ParameterMediaType = 'json';
+
 type QuerySerializerOptionsObject = {
   allowReserved?: boolean;
   array?: Partial<SerializerOptions<ArrayStyle>>;
   object?: Partial<SerializerOptions<ObjectStyle>>;
+  /**
+   * Serializes the value using the given media type instead of the `style`
+   * and `explode` rules. When set, `array` and `object` are ignored.
+   */
+  type?: ParameterMediaType;
 };
 
 export type QuerySerializerOptions = QuerySerializerOptionsObject & {

@@ -8,6 +8,7 @@ import type {
 import { jsonBodySerializer } from '../core/bodySerializer.gen';
 import {
   serializeArrayParam,
+  serializeJsonParam,
   serializeObjectParam,
   serializePrimitiveParam,
 } from '../core/pathSerializer.gen';
@@ -107,7 +108,14 @@ export const createQuerySerializer = <T = unknown>({
 
         const options = parameters[name] || args;
 
-        if (Array.isArray(value)) {
+        if (options.type === 'json') {
+          const serializedJson = serializeJsonParam({
+            allowReserved: options.allowReserved,
+            name,
+            value,
+          });
+          if (serializedJson) search.push(serializedJson);
+        } else if (Array.isArray(value)) {
           const serializedArray = serializeArrayParam({
             allowReserved: options.allowReserved,
             explode: true,

@@ -653,6 +653,14 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'parameter-content-json.json',
+        output: 'parameter-content-json',
+        plugins: ['@hey-api/client-fetch', '@hey-api/sdk'],
+      }),
+      description: 'handles JSON-encoded query parameters',
+    },
+    {
+      config: createConfig({
         input: 'parameter-explode-false.json',
         output: 'parameter-explode-false',
         plugins: ['@hey-api/client-fetch', '@hey-api/sdk'],

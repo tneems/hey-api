@@ -58,6 +58,10 @@ export interface IRParameterObject
    * Endpoint parameters must specify their location.
    */
   location: 'cookie' | 'header' | 'path' | 'query';
+  /**
+   * Media type used to serialize the parameter value. This is set only for parameters described with `content` instead of `schema`, e.g. `application/json` for a JSON-encoded query parameter. When present, the value is serialized using the media type and `style` and `explode` are ignored.
+   */
+  mediaType?: string;
   name: string;
   /**
    * Does this parameter control pagination? We handle only simple values
@@ -70,6 +74,10 @@ export interface IRParameterObject
    * Describes how the parameter value will be serialized depending on the type of the parameter value. Default values (based on value of `in`): for `query` - `form`; for `path` - `simple`; for `header` - `simple`; for `cookie` - `form`.
    */
   style: 'deepObject' | 'form' | 'label' | 'matrix' | 'pipeDelimited' | 'simple' | 'spaceDelimited';
+  /**
+   * Resolved media type of {@link IRParameterObject.mediaType}, e.g. `json`.
+   */
+  type?: IRMediaType;
 }
 
 interface IRPathsObject {

@@ -296,7 +296,11 @@ export function operationStatements({
   for (const name in operation.parameters?.query) {
     const parameter = operation.parameters.query[name]!;
 
-    if (parameter.schema.type === 'array' || parameter.schema.type === 'tuple') {
+    if (parameter.type === 'json') {
+      // the parameter is described with `content`, so the value is JSON-encoded
+      // instead of being serialized with `style` and `explode`
+      paramSerializers.prop(parameter.name, $.object().prop('type', $.literal('json')));
+    } else if (parameter.schema.type === 'array' || parameter.schema.type === 'tuple') {
       if (parameter.style !== 'form' || !parameter.explode) {
         // override the default settings for array serialization
         paramSerializers.prop(

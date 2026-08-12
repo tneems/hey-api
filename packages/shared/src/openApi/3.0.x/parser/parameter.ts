@@ -94,11 +94,13 @@ function parameterToIrParameter({
 }): IR.ParameterObject {
   // TODO: parser - fix
   let schema = parameter.schema;
+  // set only for parameters described with `content` instead of `schema`
+  let content: ReturnType<typeof mediaTypeObjects>[number] | undefined;
 
   if (!schema) {
     const contents = mediaTypeObjects({ content: parameter.content });
     // TODO: add support for multiple content types, for now prefer JSON
-    const content = contents.find((content) => content.type === 'json') || contents[0];
+    content = contents.find((content) => content.type === 'json') || contents[0];
     if (content) {
       schema = content.schema;
     }
@@ -152,6 +154,14 @@ function parameterToIrParameter({
 
   if (parameter.description) {
     irParameter.description = parameter.description;
+  }
+
+  if (content) {
+    irParameter.mediaType = content.mediaType;
+
+    if (content.type) {
+      irParameter.type = content.type;
+    }
   }
 
   if (pagination) {
